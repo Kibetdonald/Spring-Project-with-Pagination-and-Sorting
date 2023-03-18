@@ -25,5 +25,4 @@ public class Department {
     @OneToMany(mappedBy = "department")
     private Set<Employee> employees;
 
-    // getters and setters
 }

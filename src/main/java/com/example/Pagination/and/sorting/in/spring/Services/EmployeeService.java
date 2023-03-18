@@ -10,42 +10,22 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class EmployeeService {
+public interface  EmployeeService {
     @Autowired
-    private EmployeeRepository employeeRepository;
+    EmployeeRepository employeeRepository = null;
 
     @Autowired
-    private DepartmentRepository departmentRepository;
+    DepartmentRepository departmentRepository = null;
 
-    public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
-    }
+    List<Employee> getAllEmployees(int pageNo, int pageSize, String sortBy);
 
-    public Employee getEmployeeById(Long id) {
-        return employeeRepository.findById(id).orElse(null);
-    }
 
-    public Employee createEmployee(Employee employee) {
+    default Employee createEmployee(Employee employee) {
         Department department = departmentRepository.findById(employee.getDepartment().getId()).orElse(null);
         if (department != null) {
             employee.setDepartment(department);
             return employeeRepository.save(employee);
-        }
-        return null;
-    }
 
-    public Employee updateEmployee(Employee employee) {
-        Employee existingEmployee = employeeRepository.findById(employee.getId()).orElse(null);
-        if (existingEmployee != null) {
-            Department department = departmentRepository.findById(employee.getDepartment().getId()).orElse(null);
-            if (department != null) {
-                existingEmployee.setFirstName(employee.getFirstName());
-                existingEmployee.setLastName(employee.getLastName());
-                existingEmployee.setEmail(employee.getEmail());
-                existingEmployee.setPhoneNumber(employee.getPhoneNumber());
-                existingEmployee.setDepartment(department);
-                return employeeRepository.save(existingEmployee);
-            }
         }
         return null;
     }
